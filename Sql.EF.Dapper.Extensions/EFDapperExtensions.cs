@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Sql.Generator.Extensions;
-using Sql.Generator.Extensions.Interfaces;
 
 namespace Sql.EF.Dapper.Extensions
 {
@@ -79,7 +78,7 @@ namespace Sql.EF.Dapper.Extensions
 			var schema = entityType.GetSchema();
 			var table = entityType.GetTableName();
 
-			var statement = context.SqlGenerator.Insert(schema, table, parameters.ColumnToParameterMapping);
+			var statement = context.CreateSqlGenerator<TEntity>().Insert(schema, table, parameters.ColumnToParameterMapping);
 			
 			await connection.ExecuteAsync(
 				statement.Statement,
@@ -94,7 +93,7 @@ namespace Sql.EF.Dapper.Extensions
 			var connection = context.Database.GetDbConnection();
 			var parameters = new MappedDynamicParameters(entity);
 
-			var statement = context.SqlGenerator.Insert(schema, table, parameters.ColumnToParameterMapping);
+			var statement = context.CreateSqlGenerator<TEntity>().Insert(schema, table, parameters.ColumnToParameterMapping);
 			
 			await connection.ExecuteAsync(
 					statement.Statement,
@@ -116,7 +115,7 @@ namespace Sql.EF.Dapper.Extensions
 			var filterParameters = new GeneratorContext();
 
 			var connection = context.Database.GetDbConnection();
-			var updateStatement = context.SqlGenerator.Update(
+			var updateStatement = context.CreateSqlGenerator<TEntity>().Update(
 				entityType.GetSchema(),
 				entityType.GetTableName(),
 				updateExpression,
