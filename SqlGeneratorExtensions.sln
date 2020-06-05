@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sql.Generator.Extensions", "Sql.Generator.Extensions\Sql.Generator.Extensions.csproj", "{7E6132A3-1B12-4EFA-8A51-F414681C0932}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EB2BF304-CA02-42B1-9FCA-35745A278062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sql.Generator.Extensions.Tests", "Tests\Sql.Generator.Extensions.Tests\Sql.Generator.Extensions.Tests.csproj", "{7A3A151C-3195-4903-9853-962CFC5D0A9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sql.EF.Dapper.Extensions", "Sql.EF.Dapper.Extensions\Sql.EF.Dapper.Extensions.csproj", "{5A6F313A-C79B-4D8B-807A-31440E31A524}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E6132A3-1B12-4EFA-8A51-F414681C0932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E6132A3-1B12-4EFA-8A51-F414681C0932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E6132A3-1B12-4EFA-8A51-F414681C0932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E6132A3-1B12-4EFA-8A51-F414681C0932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3A151C-3195-4903-9853-962CFC5D0A9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3A151C-3195-4903-9853-962CFC5D0A9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3A151C-3195-4903-9853-962CFC5D0A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3A151C-3195-4903-9853-962CFC5D0A9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A6F313A-C79B-4D8B-807A-31440E31A524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A6F313A-C79B-4D8B-807A-31440E31A524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A6F313A-C79B-4D8B-807A-31440E31A524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A6F313A-C79B-4D8B-807A-31440E31A524}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A3A151C-3195-4903-9853-962CFC5D0A9F} = {EB2BF304-CA02-42B1-9FCA-35745A278062}
+	EndGlobalSection
+EndGlobal

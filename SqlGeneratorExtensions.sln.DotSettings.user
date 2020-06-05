@@ -1,0 +1,15 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0183b7dd_002Dcf47_002D47e2_002D8516_002Db5fee63237b8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="SimpleWhere" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7A3A151C-3195-4903-9853-962CFC5D0A9F::.NETCoreApp,Version=v3.1::Sql.Generator.Extensions.Tests.Postgres.WhereTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ff1acb88_002D483d_002D4ccd_002Dae2a_002Df58f21779db4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AndOperator" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;xUnit::7A3A151C-3195-4903-9853-962CFC5D0A9F::.NETCoreApp,Version=v3.1::Sql.Generator.Extensions.Tests.Postgres.WhereTests.AndOperator&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::7A3A151C-3195-4903-9853-962CFC5D0A9F::.NETCoreApp,Version=v3.1::Sql.Generator.Extensions.Tests.Postgres.AssignTests.Test1&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+    &lt;ProjectFile&gt;7A3A151C-3195-4903-9853-962CFC5D0A9F/d:Postgres/f:WhereTests.cs&lt;/ProjectFile&gt;&#xD;
+  &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
