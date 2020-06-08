@@ -16,7 +16,7 @@ namespace Sql.Generator.Extensions.Filters
 		public override object Value => throw CreateException();
 
 		public LikeOperation(
-			[NotNull] MethodCallExpression expression,
+			[NotNull] Expression expression,
 			[NotNull] ISqlDialect dialect,
 			[NotNull] FilterParseHelpers parseHelper,
 			bool skipBrackets) : base(expression, dialect, skipBrackets)

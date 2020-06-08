@@ -4,6 +4,11 @@
     &lt;TestId&gt;xUnit::7A3A151C-3195-4903-9853-962CFC5D0A9F::.NETCoreApp,Version=v3.1::Sql.Generator.Extensions.Tests.Postgres.WhereTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=42c650fd_002Deedb_002D4998_002D9ceb_002D35a661c04421/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="InTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7A3A151C-3195-4903-9853-962CFC5D0A9F::.NETCoreApp,Version=v3.1::Sql.Generator.Extensions.Tests.Postgres.WhereTests.InTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ff1acb88_002D483d_002D4ccd_002Dae2a_002Df58f21779db4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AndOperator" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Or&gt;&#xD;
     &lt;TestAncestor&gt;&#xD;

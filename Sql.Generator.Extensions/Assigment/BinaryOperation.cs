@@ -13,13 +13,16 @@ namespace Sql.Generator.Extensions.Assigment
 		[NotNull] private readonly IAssigmentOperation _right;
 
 		[NotNull] private readonly BinaryExpression _expression;
+		[NotNull] private readonly Expression _originalExpression;
 		private readonly bool _skipBrackets;
 
 		public override bool IsValue => _left.IsValue && _right.IsValue;
 
-		public override object Value => GetValue(_expression);
+		public override object Value => GetValue(_originalExpression);
 
-		public BinaryOperation([NotNull] BinaryExpression expression,
+		public BinaryOperation(
+			[NotNull] BinaryExpression expression,
+			[NotNull] Expression originalExpression,
 			[NotNull] string name,
 			[NotNull] ISqlDialect dialect,
 			[NotNull] AssigmentParseHelpers assigmentParseHelpers,
@@ -28,6 +31,7 @@ namespace Sql.Generator.Extensions.Assigment
 			) : base(name, dialect, nameConverter)
 		{
 			_expression = expression ?? throw new ArgumentNullException(nameof(expression));
+			_originalExpression = originalExpression ?? throw new ArgumentNullException(nameof(originalExpression));
 			_skipBrackets = skipBrackets;
 
 			_left = assigmentParseHelpers.ParseExpression(_expression.Left, name);
@@ -56,6 +60,10 @@ namespace Sql.Generator.Extensions.Assigment
 							ExpressionType.OrElse => " " + Dialect.LogicalOr + " ",
 							ExpressionType.Equal => " " + Dialect.LogicalEquals + " ",
 							ExpressionType.NotEqual => " " + Dialect.LogicalNotEquals + " ",
+							ExpressionType.GreaterThan => " " + Dialect.LogicalGreater + " ",
+							ExpressionType.GreaterThanOrEqual => " " + Dialect.LogicalGreaterEquals + " ",
+							ExpressionType.LessThan => " " + Dialect.LogicalLess + " ",
+							ExpressionType.LessThanOrEqual => " " + Dialect.LogicalLessEquals + " ",
 							ExpressionType.Add => " " + Dialect.PlusSign + " ",
 							ExpressionType.AddChecked => " " + Dialect.PlusSign + " ",
 							ExpressionType.Subtract => " " + Dialect.MinusSign + " ",

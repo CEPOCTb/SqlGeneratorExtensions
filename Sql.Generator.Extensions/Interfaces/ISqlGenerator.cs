@@ -12,5 +12,7 @@ namespace Sql.Generator.Extensions.Interfaces
 		WhereStatement Where<TParam>(Expression<Func<TParam, bool>> filterExpression);
 
 		UpdateStatement Update<TParam>(string schema, string table, Expression<Func<TParam>> updateAction, Expression<Func<TParam, bool>> filterExpression = null);
+
+		DeleteStatement Delete<TParam>(string schema, string table, Expression<Func<TParam, bool>> filterExpression);
 	}
 }

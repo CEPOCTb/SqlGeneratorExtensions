@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Sql.Generator.Extensions.Dialects;
 using Sql.Generator.Extensions.Interfaces;
@@ -78,7 +79,7 @@ namespace Sql.Generator.Extensions.Tests.Postgres
 			Assert.NotNull(result);
 			Assert.NotNull(result.Params);
 			Assert.Equal(@"""c"".""StringProperty"" = @p0", result.Statement);
-			Assert.Collection(result.Params, pair => Assert.True(pair.Key == "p0" && pair.Value == "123"));
+			Assert.Collection(result.Params, pair => Assert.True(pair.Key == "p0" && pair.Value as string == "123"));
 		}
 
 		[Fact]
@@ -92,7 +93,7 @@ namespace Sql.Generator.Extensions.Tests.Postgres
 			Assert.Equal(@"(""c"".""StringProperty"" = @p0) AND (""c"".""BoolProperty"" = @p1)", result.Statement);
 			Assert.Collection(
 				result.Params,
-					pair => Assert.True(pair.Key == "p0" && pair.Value == "123"),
+					pair => Assert.True(pair.Key == "p0" && pair.Value as string == "123"),
 					pair => Assert.True((bool) pair.Value && pair.Key == "p1")
 				);
 		}
@@ -109,9 +110,42 @@ namespace Sql.Generator.Extensions.Tests.Postgres
 			Assert.Equal(@"(""c"".""StringProperty"" = @p0) AND (""c"".""StringProperty2"" = @p0)", result.Statement);
 			Assert.Collection(
 				result.Params,
-				pair => Assert.True(pair.Key == "p0" && pair.Value == "123")
+				pair => Assert.True(pair.Key == "p0" && pair.Value as string == "123")
 				);
 		}
 
+		[Fact]
+		public void InTest()
+		{
+			var generator = new SqlGenerator<PostgresDialect>();
+
+			var list = new List<int>() { 1, 2, 3 };
+			
+			var result = generator.Where<WhereTests.TestClass>(
+				c => list.Contains(c.IntProperty)
+				);
+
+			Assert.NotNull(result);
+			Assert.NotNull(result.Params);
+			Assert.Empty(result.Params);
+			Assert.Equal(@"""c"".""IntProperty"" IN (1, 2, 3)", result.Statement);
+		}
+
+		[Fact]
+		public void EmptyInTest()
+		{
+			var generator = new SqlGenerator<PostgresDialect>();
+
+			var list = new List<int>();
+
+			var result = generator.Where<WhereTests.TestClass>(
+				c => list.Contains(c.IntProperty)
+				);
+
+			Assert.NotNull(result);
+			Assert.NotNull(result.Params);
+			Assert.Empty(result.Params);
+			Assert.Equal(@"1 = 1", result.Statement);
+		}
 	}
 }

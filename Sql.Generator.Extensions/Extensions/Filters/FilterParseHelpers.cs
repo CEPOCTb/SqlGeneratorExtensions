@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -23,8 +24,8 @@ namespace Sql.Generator.Extensions.Extensions.Filters
 				typeof(sbyte)
 			};
 
-		private readonly Dictionary<MethodInfo, Func<MethodCallExpression, ISqlDialect, FilterParseHelpers, bool, IFilterOperation>> _dictionaryPseudoMethods =
-			new Dictionary<MethodInfo, Func<MethodCallExpression, ISqlDialect, FilterParseHelpers, bool, IFilterOperation>>()
+		private readonly Dictionary<MethodInfo, Func<Expression, ISqlDialect, FilterParseHelpers, bool, IFilterOperation>> _dictionaryPseudoMethods =
+			new Dictionary<MethodInfo, Func<Expression, ISqlDialect, FilterParseHelpers, bool, IFilterOperation>>()
 				{
 					[typeof(FiltersPseudoMethods).GetMethod(nameof(FiltersPseudoMethods.Like))!] =
 						(expression, dialect, parseHelper, skipBraces) => new LikeOperation(expression, dialect, parseHelper, skipBraces),
@@ -41,7 +42,7 @@ namespace Sql.Generator.Extensions.Extensions.Filters
 				KeyValuePair<
 					MethodInfo,
 					Func<
-						MethodCallExpression,
+						Expression,
 						ISqlDialect,
 						FilterParseHelpers,
 						bool,
@@ -101,11 +102,11 @@ namespace Sql.Generator.Extensions.Extensions.Filters
 			var exp = expression.UnwrapConvert();
 			if (exp is BinaryExpression bin)
 			{
-				return new BinaryOperation(bin, _dialect, this, skipBrackets);
+				return new BinaryOperation(bin, expression, _dialect, this, skipBrackets);
 			}
 			else
 			{
-				return ParseUnaryExpression(exp, skipBrackets);
+				return ParseUnaryExpression(expression, skipBrackets);
 			}
 		}
 
@@ -115,29 +116,41 @@ namespace Sql.Generator.Extensions.Extensions.Filters
 			return exp.NodeType switch
 				{
 					ExpressionType.Not => new NotOperation((UnaryExpression) exp, _dialect, this),
-					ExpressionType.MemberAccess => ParseMemberAccessExpression(exp as MemberExpression),
-					ExpressionType.Constant => new ConstantOperation((ConstantExpression) exp, _dialect, this),
-					ExpressionType.Call => ParseCallExpression(exp as MethodCallExpression, skipBrackets),
-					_ => new ValueOperation(exp, _dialect, this)
+					ExpressionType.MemberAccess => ParseMemberAccessExpression(expression),
+					ExpressionType.Call => ParseCallExpression(expression, skipBrackets),
+					_ => new ValueOperation(expression, _dialect, this)
 				};
 		}
 
-		private IFilterOperation ParseMemberAccessExpression(MemberExpression expression)
+		private IFilterOperation ParseMemberAccessExpression(Expression expression)
 		{
-			if (expression.Expression.NodeType == ExpressionType.Parameter)
+			var exp = expression.UnwrapConvert() as MemberExpression;
+			if (exp.Expression.NodeType == ExpressionType.Parameter)
 			{
-				return new ParameterRefOperation(expression, _dialect, _nameConverter);
+				return new ParameterRefOperation(exp, _dialect, _nameConverter);
 			}
 
 			return new ValueOperation(expression, _dialect, this);
 		}
 
-		private IFilterOperation ParseCallExpression(MethodCallExpression expression, bool skipBrackets = false)
+		private IFilterOperation ParseCallExpression(Expression expression, bool skipBrackets = false)
 		{
-			if (_dictionaryPseudoMethods.TryGetValue(expression.Method, out var filter))
+			var exp = expression.UnwrapConvert() as MethodCallExpression;
+			if (_dictionaryPseudoMethods.TryGetValue(exp.Method, out var filter))
 			{
 				return filter(expression, _dialect, this, skipBrackets);
 			}
+
+			if (exp.Method.Name == "Contains"
+				&& (
+					(exp.Method.IsStatic && exp.Arguments.Count > 1 && typeof(IEnumerable).IsAssignableFrom(exp.Arguments[0].Type))
+					|| (!exp.Method.IsStatic && exp.Arguments.Count > 0 && typeof(IEnumerable).IsAssignableFrom(exp.Method.DeclaringType))
+					)
+				)
+			{
+				return new InOperation(expression, _dialect, this, skipBrackets);
+			}
+
 
 			return new ValueOperation(expression, _dialect, this);
 		}

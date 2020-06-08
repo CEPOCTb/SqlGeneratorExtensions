@@ -138,6 +138,30 @@ namespace Sql.Generator.Extensions
 				};
 		}
 
+		/// <inheritdoc />
+		public DeleteStatement Delete<TParam>(string schema, string table, Expression<Func<TParam, bool>> filterExpression)
+		{
+			var generatorContext = new GeneratorContext();
+
+			var tableAlias = _filterParseHelpers.GetTableAlias(filterExpression);
+
+			var sb = new StringBuilder("DELETE FROM ")
+				.Append(_dialect.GetEscapedTableName(table, schema, tableAlias));
+
+			var filter = _filterParseHelpers.ParseFilter(filterExpression.Body);
+			sb.Append(" WHERE ");
+			filter.AppendSql(sb, generatorContext);
+
+			return new DeleteStatement
+				{
+					Statement = sb.ToString(),
+					Params = generatorContext.Params.ToDictionary(
+						p => p.Value,
+						p => p.Key
+						)
+				};
+		}
+
 		#endregion
 	}
 }

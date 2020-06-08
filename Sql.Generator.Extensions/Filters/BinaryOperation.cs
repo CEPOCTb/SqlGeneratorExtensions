@@ -14,19 +14,22 @@ namespace Sql.Generator.Extensions.Filters
 		[CanBeNull] private readonly IFilterOperation _override;
 
 		[NotNull] private readonly BinaryExpression _expression;
+		[NotNull] private readonly Expression _originalExpression;
 		private readonly bool _skipBrackets;
 
 		public override bool IsValue => _left.IsValue && _right.IsValue;
 
-		public override object Value => GetValue(_expression);
+		public override object Value => GetValue(_originalExpression);
 
 		public BinaryOperation(
 			[NotNull] BinaryExpression expression,
+			[NotNull] Expression originalExpression,
 			[NotNull] ISqlDialect dialect,
 			[NotNull] FilterParseHelpers parseHelper, 
 			bool skipBrackets) : base(dialect)
 		{
 			_expression = expression ?? throw new ArgumentNullException(nameof(expression));
+			_originalExpression = originalExpression ?? throw new ArgumentNullException(nameof(originalExpression));
 			_skipBrackets = skipBrackets;
 
 			_left = parseHelper.ParseExpression(_expression.Left);
@@ -97,6 +100,10 @@ namespace Sql.Generator.Extensions.Filters
 							ExpressionType.OrElse => " " + Dialect.LogicalOr + " ",
 							ExpressionType.Equal => " " + Dialect.LogicalEquals + " ",
 							ExpressionType.NotEqual => " " + Dialect.LogicalNotEquals + " ",
+							ExpressionType.GreaterThan => " " + Dialect.LogicalGreater + " ",
+							ExpressionType.GreaterThanOrEqual => " " + Dialect.LogicalGreaterEquals + " ",
+							ExpressionType.LessThan => " " + Dialect.LogicalLess + " ",
+							ExpressionType.LessThanOrEqual => " " + Dialect.LogicalLessEquals + " ",
 							ExpressionType.Add => " " + Dialect.PlusSign + " ",
 							ExpressionType.AddChecked => " " + Dialect.PlusSign + " ",
 							ExpressionType.Subtract => " " + Dialect.MinusSign + " ",

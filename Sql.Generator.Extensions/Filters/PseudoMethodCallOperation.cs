@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
+using Sql.Generator.Extensions.Extensions;
 using Sql.Generator.Extensions.Interfaces;
 
 namespace Sql.Generator.Extensions.Filters
@@ -10,9 +11,9 @@ namespace Sql.Generator.Extensions.Filters
 		protected MethodCallExpression CallExpression { get; }
 		protected bool SkipBrackets { get; }
 
-		protected PseudoMethodCallOperation([NotNull] MethodCallExpression expression, ISqlDialect dialect, bool skipBrackets) : base(dialect)
+		protected PseudoMethodCallOperation([NotNull] Expression expression, ISqlDialect dialect, bool skipBrackets) : base(dialect)
 		{
-			CallExpression = expression ?? throw new ArgumentNullException(nameof(expression));
+			CallExpression = expression?.UnwrapConvert() as MethodCallExpression ?? throw new ArgumentNullException(nameof(expression));
 			SkipBrackets = skipBrackets;
 		}
 

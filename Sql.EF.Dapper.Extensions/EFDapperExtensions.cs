@@ -104,30 +104,25 @@ namespace Sql.EF.Dapper.Extensions
 		}
 
 		[PublicAPI]
-		public static async Task UpdateAsync<TEntity>(this DapperHybridContext context, Expression<Func<TEntity>> updateExpression, Expression<Func<TEntity, bool>> filterExpression)
+		public static async Task UpdateAsync<TEntity>(this DapperHybridContext context, string schema, string table, Expression<Func<TEntity>> updateExpression, Expression<Func<TEntity, bool>> filterExpression = null)
 		{
-			var entityType = context.Model.FindEntityType(typeof(TEntity));
-			if (entityType == null)
-			{
-				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
-			}
-
 			var filterParameters = new GeneratorContext();
 
 			var connection = context.Database.GetDbConnection();
-			var updateStatement = context.CreateSqlGenerator<TEntity>().Update(
-				entityType.GetSchema(),
-				entityType.GetTableName(),
-				updateExpression,
-				filterExpression
-				);
-			
+			var updateStatement = context.CreateSqlGenerator<TEntity>()
+				.Update(
+					schema,
+					table,
+					updateExpression,
+					filterExpression
+					);
+
 			var parameters = new DynamicParameters();
 			foreach (var parameter in updateStatement.Params)
 			{
 				parameters.Add(parameter.Key, parameter.Value);
 			}
-			
+
 			await connection.ExecuteAsync(
 					updateStatement.Statement,
 					parameters,
@@ -136,5 +131,62 @@ namespace Sql.EF.Dapper.Extensions
 				.ConfigureAwait(false);
 		}
 
+		[PublicAPI]
+		public static Task UpdateAsync<TEntity>(this DapperHybridContext context, Expression<Func<TEntity>> updateExpression, Expression<Func<TEntity, bool>> filterExpression = null)
+		{
+			var entityType = context.Model.FindEntityType(typeof(TEntity));
+			if (entityType == null)
+			{
+				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
+			}
+
+			return UpdateAsync(
+				context,
+				entityType.GetSchema(),
+				entityType.GetTableName(),
+				updateExpression,
+				filterExpression
+				);
+		}
+
+		[PublicAPI]
+		public static async Task DeleteAsync<TEntity>(this DapperHybridContext context, string schema, string table, Expression<Func<TEntity, bool>> filterExpression)
+		{
+			var filterParameters = new GeneratorContext();
+
+			var connection = context.Database.GetDbConnection();
+			var deleteStatement = context.CreateSqlGenerator<TEntity>()
+				.Delete(
+					schema,
+					table,
+					filterExpression
+					);
+
+			var parameters = new DynamicParameters();
+			foreach (var parameter in deleteStatement.Params)
+			{
+				parameters.Add(parameter.Key, parameter.Value);
+			}
+
+			await connection.ExecuteAsync(
+					deleteStatement.Statement,
+					parameters,
+					transaction: context.Database.CurrentTransaction?.GetDbTransaction()
+					)
+				.ConfigureAwait(false);
+		}
+
+		[PublicAPI]
+		public static Task DeleteAsync<TEntity>(this DapperHybridContext context, Expression<Func<TEntity, bool>> filterExpression)
+		{
+			var entityType = context.Model.FindEntityType(typeof(TEntity));
+			if (entityType == null)
+			{
+				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
+			}
+
+			return DeleteAsync(context, entityType.GetSchema(), entityType.GetTableName(), filterExpression);
+		}
+		
 	}
 }

@@ -62,7 +62,7 @@ namespace Sql.Generator.Extensions.Dialects
 				.ToString();
 
 		/// <inheritdoc />
-		public abstract bool NotEqualsSupported { get; }
+		public virtual bool NotEqualsSupported => true;
 
 		/// <inheritdoc />
 		public virtual string ParameterPrefix => "@";
@@ -89,7 +89,22 @@ namespace Sql.Generator.Extensions.Dialects
 		public virtual string LogicalEquals => "=";
 
 		/// <inheritdoc />
-		public string LogicalNotEquals => "!=";
+		public virtual string NullEquals => "IS";
+
+		/// <inheritdoc />
+		public virtual string LogicalGreater => ">";
+
+		/// <inheritdoc />
+		public virtual string LogicalGreaterEquals => ">=";
+
+		/// <inheritdoc />
+		public virtual string LogicalLess => "<";
+
+		/// <inheritdoc />
+		public virtual string LogicalLessEquals => "<=";
+
+		/// <inheritdoc />
+		public string LogicalNotEquals => "<>";
 
 		/// <inheritdoc />
 		public virtual string PlusSign => "+";
@@ -108,6 +123,9 @@ namespace Sql.Generator.Extensions.Dialects
 
 		/// <inheritdoc />
 		public virtual string NotKeyword => "NOT";
+
+		/// <inheritdoc />
+		public string InKeyword => "IN";
 
 		/// <inheritdoc />
 		public virtual string AssignSign => "=";

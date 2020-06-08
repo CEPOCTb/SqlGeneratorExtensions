@@ -97,6 +97,7 @@ namespace Sql.Generator.Extensions.Extensions.Assigment
 			{
 				return new BinaryOperation(
 					bin,
+					expression,
 					name,
 					_dialect,
 					this,
@@ -106,7 +107,7 @@ namespace Sql.Generator.Extensions.Extensions.Assigment
 			}
 			else
 			{
-				return ParseUnaryExpression(exp, name, skipBrackets);
+				return ParseUnaryExpression(expression, name, skipBrackets);
 			}
 		}
 
@@ -147,8 +148,7 @@ namespace Sql.Generator.Extensions.Extensions.Assigment
 
 		private IAssigmentOperation ParseBinding(MemberAssignment binding)
 		{
-			var exp = ParseExpression(binding.Expression, binding.Member.Name);
-			return exp;
+			return ParseExpression(binding.Expression, binding.Member.Name);
 		}
 
 		private IAssigmentOperation ParseUnaryExpression(Expression expression, string name, bool skipBrackets = false)
@@ -157,17 +157,17 @@ namespace Sql.Generator.Extensions.Extensions.Assigment
 			return exp.NodeType switch
 				{
 					ExpressionType.Not => new NotOperation((UnaryExpression) exp, name, _dialect, _nameConverter, this),
-					ExpressionType.MemberAccess => ParseMemberAccessExpression(exp as MemberExpression, name),
-					ExpressionType.Constant => new ConstantOperation((ConstantExpression) exp, name, _dialect, _nameConverter, this),
-					_ => new ValueOperation(exp, name, _dialect, _nameConverter)
+					ExpressionType.MemberAccess => ParseMemberAccessExpression(expression, name),
+					_ => new ValueOperation(expression, name, _dialect, _nameConverter)
 				};
 		}
 
-		private IAssigmentOperation ParseMemberAccessExpression(MemberExpression expression, string name)
+		private IAssigmentOperation ParseMemberAccessExpression(Expression expression, string name)
 		{
-			if (expression.Expression.NodeType == ExpressionType.Parameter)
+			var exp = expression.UnwrapConvert() as MemberExpression;
+			if (exp.Expression.NodeType == ExpressionType.Parameter)
 			{
-				return new ParameterRefOperation(expression, name, _dialect, _nameConverter);
+				return new ParameterRefOperation(exp, name, _dialect, _nameConverter);
 			}
 
 			return new ValueOperation(expression, name, _dialect, _nameConverter);

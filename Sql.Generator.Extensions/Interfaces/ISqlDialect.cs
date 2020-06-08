@@ -17,6 +17,11 @@ namespace Sql.Generator.Extensions.Interfaces
 		string LogicalAnd { get; }
 		string LogicalOr { get; }
 		string LogicalEquals { get; }
+		string NullEquals { get; }
+		string LogicalGreater { get; }
+		string LogicalGreaterEquals { get; }
+		string LogicalLess { get; }
+		string LogicalLessEquals { get; }
 		string LogicalNotEquals { get; }
 		string PlusSign { get; }
 		string MinusSign { get; }
@@ -24,6 +29,7 @@ namespace Sql.Generator.Extensions.Interfaces
 		string DivideSign { get; }
 		string LikeKeyword { get; }
 		string NotKeyword { get; }
+		string InKeyword { get; }
 		string AssignSign { get; }
 	}
 }

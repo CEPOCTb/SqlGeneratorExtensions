@@ -1,14 +1,14 @@
 namespace Sql.Generator.Extensions.Dialects
 {
-	public class MySqlDialect : BaseDialect
+	public class SqlServerDialect : BaseDialect
 	{
 		#region Overrides of BaseDialect
 
 		/// <inheritdoc />
-		public override string NameEscapeOpen => "`";
+		public override string NameEscapeOpen => "[";
 
 		/// <inheritdoc />
-		public override string NameEscapeClose => "`";
+		public override string NameEscapeClose => "]";
 
 		#endregion
 	}
