@@ -1,4 +1,5 @@
-using Sql.Generator.Extensions.Dialects;
+using PK.Sql.Generator.Extensions;
+using PK.Sql.Generator.Extensions.Dialects;
 using Xunit;
 
 namespace Sql.Generator.Extensions.Tests.Postgres

@@ -1,0 +1,12 @@
+﻿<Project>
+    <PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
+        <Copyright>Copyright © CEPOCTb $(CurrentYear)</Copyright>
+        <Authors>CEPOCTb</Authors>
+		<PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+		<RepositoryUrl>https://github.com/CEPOCTb/SqlGeneratorExtensions</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/CEPOCTb/SqlGeneratorExtensions</PackageProjectUrl>
+		<RepositoryType>Git</RepositoryType>
+	</PropertyGroup>
+</Project>

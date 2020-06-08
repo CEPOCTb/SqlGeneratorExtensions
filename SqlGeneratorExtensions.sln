@@ -1,12 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sql.Generator.Extensions", "Sql.Generator.Extensions\Sql.Generator.Extensions.csproj", "{7E6132A3-1B12-4EFA-8A51-F414681C0932}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PK.Sql.Generator.Extensions", "PK.Sql.Generator.Extensions\PK.Sql.Generator.Extensions.csproj", "{7E6132A3-1B12-4EFA-8A51-F414681C0932}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EB2BF304-CA02-42B1-9FCA-35745A278062}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sql.Generator.Extensions.Tests", "Tests\Sql.Generator.Extensions.Tests\Sql.Generator.Extensions.Tests.csproj", "{7A3A151C-3195-4903-9853-962CFC5D0A9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sql.EF.Dapper.Extensions", "Sql.EF.Dapper.Extensions\Sql.EF.Dapper.Extensions.csproj", "{5A6F313A-C79B-4D8B-807A-31440E31A524}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PK.EF.Dapper.Extensions", "PK.EF.Dapper.Extensions\PK.EF.Dapper.Extensions.csproj", "{5A6F313A-C79B-4D8B-807A-31440E31A524}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".SolutionItems", ".SolutionItems", "{714A05E4-283A-42D6-95D0-1CCC0A0C0709}"
+ProjectSection(SolutionItems) = preProject
+	Directory.Build.props = Directory.Build.props
+	Directory.Build.targets = Directory.Build.targets
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

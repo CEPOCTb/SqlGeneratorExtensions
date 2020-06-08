@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Sql.Generator.Extensions\Sql.Generator.Extensions.csproj" />
+	  <ProjectReference Include="..\..\PK.Sql.Generator.Extensions\PK.Sql.Generator.Extensions.csproj" />
 	</ItemGroup>
 
 </Project>

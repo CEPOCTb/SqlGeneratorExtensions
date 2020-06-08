@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Sql.Generator.Extensions.Dialects;
-using Sql.Generator.Extensions.Interfaces;
+using PK.Sql.Generator.Extensions;
+using PK.Sql.Generator.Extensions.Dialects;
+using PK.Sql.Generator.Extensions.Interfaces;
 using Xunit;
 using Xunit.Sdk;
 
