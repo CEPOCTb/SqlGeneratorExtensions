@@ -11,19 +11,11 @@ using Sql.Generator.Extensions.Models;
 
 namespace Sql.Generator.Extensions
 {
-	public class SqlGenerator<T> : ISqlGenerator where T : ISqlDialect, new()
+	public class SqlGenerator : ISqlGenerator
 	{
 		[NotNull] private readonly ISqlDialect _dialect;
 		private readonly FilterParseHelpers _filterParseHelpers;
 		private readonly AssigmentParseHelpers _assigmentParseHelpers;
-
-		public SqlGenerator()
-		{
-			_dialect = new T();
-			var dumbConverter = new DumbNameConverter();
-			_filterParseHelpers = new FilterParseHelpers(_dialect, dumbConverter);
-			_assigmentParseHelpers = new AssigmentParseHelpers(_dialect, dumbConverter);
-		}
 
 		public SqlGenerator([NotNull] ISqlDialect dialect, [NotNull] INameConverter nameConverter)
 		{
@@ -38,7 +30,7 @@ namespace Sql.Generator.Extensions
 			}
 
 			_dialect = dialect;
-			_filterParseHelpers = new FilterParseHelpers(dialect, nameConverter);
+			_filterParseHelpers = new FilterParseHelpers(_dialect, nameConverter);
 			_assigmentParseHelpers = new AssigmentParseHelpers(_dialect, nameConverter);
 		}
 
@@ -163,5 +155,21 @@ namespace Sql.Generator.Extensions
 		}
 
 		#endregion
+	}
+	
+	public class SqlGenerator<T> : SqlGenerator where T : ISqlDialect, new()
+	{
+		public SqlGenerator() : this(new T(), new DumbNameConverter())
+		{
+		}
+
+		public SqlGenerator(INameConverter nameConverter) : this(new T(), nameConverter)
+		{
+		}
+
+		public SqlGenerator(T dialect, INameConverter nameConverter) : base(dialect, nameConverter)
+		{
+		}
+
 	}
 }

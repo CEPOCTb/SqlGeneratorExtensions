@@ -12,7 +12,7 @@ namespace Sql.EF.Dapper.Extensions
 
 		public abstract ISqlGenerator CreateSqlGenerator<TEntity>();
 
-		public abstract INameConverter CreateNameConverter<TEntity>();
+		public virtual INameConverter CreateNameConverter<TEntity>() => new EFNameConverter<TEntity>(this);
 	}
 
 	public abstract class DapperHybridContext<T> : DapperHybridContext where T : ISqlDialect, new()
@@ -27,13 +27,7 @@ namespace Sql.EF.Dapper.Extensions
 		/// <inheritdoc />
 		public override ISqlGenerator CreateSqlGenerator<TEntity>()
 		{
-			return new SqlGenerator<T>(new T(), CreateNameConverter<TEntity>());
-		}
-
-		/// <inheritdoc />
-		public override INameConverter CreateNameConverter<TEntity>()
-		{
-			return new EFNameConverter<TEntity>(this);
+			return new SqlGenerator<T>(CreateNameConverter<TEntity>());
 		}
 
 		#endregion
