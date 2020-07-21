@@ -29,7 +29,11 @@ namespace PK.Sql.Generator.Extensions.Filters
 		public override void AppendSql([NotNull] StringBuilder builder, [NotNull] GeneratorContext filterParams)
 		{
 			var value = Value;
-			if (_parseHelper.IsSimpleType(value.GetType()))
+			if (value is null)
+			{
+				builder.Append("NULL");
+			}
+			else if (_parseHelper.IsSimpleType(value.GetType()))
 			{
 				builder.Append(value);
 			}

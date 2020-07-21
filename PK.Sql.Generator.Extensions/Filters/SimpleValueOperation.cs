@@ -26,13 +26,19 @@ namespace PK.Sql.Generator.Extensions.Filters
 
 		public override void AppendSql([NotNull] StringBuilder builder, [NotNull] GeneratorContext filterParams)
 		{
-			if (_parseHelper.IsSimpleType(Value.GetType()))
+			var value = Value;
+
+			if (value is null)
 			{
-				builder.Append(Value);
+				builder.Append("NULL");
+			}
+			else if (_parseHelper.IsSimpleType(value.GetType()))
+			{
+				builder.Append(value);
 			}
 			else
 			{
-				var paramName = filterParams.Add(Value);
+				var paramName = filterParams.Add(value);
 				builder.Append(Dialect.GetParameterReference(paramName));
 			}
 		}

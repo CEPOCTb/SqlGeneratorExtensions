@@ -31,8 +31,8 @@ namespace PK.EF.Dapper.Extensions
 			{
 				return propertyName;
 			}
-			
-			return property.GetColumnName();
+
+			return property.GetColumnName() ?? propertyName;
 		}
 
 		#endregion

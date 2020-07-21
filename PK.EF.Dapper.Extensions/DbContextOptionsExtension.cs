@@ -5,7 +5,7 @@ using PK.Sql.Generator.Extensions.Interfaces;
 
 namespace PK.EF.Dapper.Extensions
 {
-	public class DbContextOptionsExtension<T> : IDbContextOptionsExtension where T : class, ISqlGenerator
+	public class DbContextOptionsExtension<T> : IDbContextOptionsExtension where T : class, ISqlDialect
 	{
 		private class ExtensionInfo : DbContextOptionsExtensionInfo
 		{
@@ -27,7 +27,7 @@ namespace PK.EF.Dapper.Extensions
 			public override bool IsDatabaseProvider => false;
 
 			/// <inheritdoc />
-			public override string LogFragment => $"Dapper:SqlGenerator used: {typeof(T).Name}";
+			public override string LogFragment => $"Dapper:SqlDialect used: {typeof(T).Name}";
 
 			#endregion
 		}
@@ -37,7 +37,7 @@ namespace PK.EF.Dapper.Extensions
 		/// <inheritdoc />
 		public void ApplyServices(IServiceCollection services)
 		{
-			services.AddSingleton<ISqlGenerator, T>();
+			services.AddSingleton<ISqlDialect, T>();
 		}
 
 		/// <inheritdoc />

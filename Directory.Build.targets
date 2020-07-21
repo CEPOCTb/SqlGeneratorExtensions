@@ -1,8 +1,9 @@
 <Project>
     <PropertyGroup>
 		<LangVersion>8</LangVersion>
-		<Version Condition="'$(Configuration)' == 'Debug'">$(Version)-alpha</Version>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<BuildNumber Condition="'$(Configuration)' == 'Debug'">$([System.DateTime]::UtcNow.ToString("yyMMddHHmm"))</BuildNumber>
+		<Version Condition="'$(Configuration)' == 'Debug'">$(Version)-alpha-$(BuildNumber)</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>true</IncludeSource>
         <PackageOutputPath>$(SolutionDir)\BuildPackages\</PackageOutputPath>

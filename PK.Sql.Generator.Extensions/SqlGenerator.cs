@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using PK.Sql.Generator.Extensions.Extensions.Assigment;
 using PK.Sql.Generator.Extensions.Extensions.Filters;
 using PK.Sql.Generator.Extensions.Interfaces;
@@ -14,10 +15,15 @@ namespace PK.Sql.Generator.Extensions
 	public class SqlGenerator : ISqlGenerator
 	{
 		[NotNull] private readonly ISqlDialect _dialect;
+		[CanBeNull] private readonly ILogger<SqlGenerator> _logger;
 		private readonly FilterParseHelpers _filterParseHelpers;
 		private readonly AssigmentParseHelpers _assigmentParseHelpers;
 
-		public SqlGenerator([NotNull] ISqlDialect dialect, [NotNull] INameConverter nameConverter)
+		public SqlGenerator(
+			[NotNull] ISqlDialect dialect,
+			[NotNull] INameConverter nameConverter,
+			[CanBeNull] ILoggerFactory loggerFactory
+			)
 		{
 			if (dialect == null)
 			{
@@ -30,6 +36,7 @@ namespace PK.Sql.Generator.Extensions
 			}
 
 			_dialect = dialect;
+			_logger = loggerFactory?.CreateLogger<SqlGenerator>();
 			_filterParseHelpers = new FilterParseHelpers(_dialect, nameConverter);
 			_assigmentParseHelpers = new AssigmentParseHelpers(_dialect, nameConverter);
 		}
@@ -59,7 +66,11 @@ namespace PK.Sql.Generator.Extensions
 					)
 				.Append(')');
 
-			return new InsertStatement { Statement = stringBuilder.ToString() };
+			var statement = stringBuilder.ToString();
+
+			_logger?.LogDebug("Generated INSERT statement: {statement}", statement);
+
+			return new InsertStatement { Statement = statement };
 		}
 
 		/// <inheritdoc />
@@ -68,13 +79,17 @@ namespace PK.Sql.Generator.Extensions
 			var generatorContext = new GeneratorContext();
 
 			var sb = new StringBuilder();
-			
+
 			var filter = _filterParseHelpers.ParseFilter(filterExpression.Body);
 			filter.AppendSql(sb, generatorContext);
 
+			var statement = sb.ToString();
+
+			_logger?.LogDebug("Generated WHERE statement: {statement}", statement);
+
 			return new WhereStatement
 				{
-					Statement = sb.ToString(),
+					Statement = statement,
 					// reverse dictionary
 					Params = generatorContext.Params.ToDictionary(
 						p => p.Value,
@@ -103,8 +118,8 @@ namespace PK.Sql.Generator.Extensions
 				}
 
 				generatorContext.ColumnsMappings[assigment.ColumnName] = assigment.Name;
-				
-				sb.Append(_dialect.GetEscapedParameterName(assigment.ColumnName, tableAlias))
+
+				sb.Append(_dialect.GetEscapedParameterName(assigment.ColumnName))
 					.Append(" ")
 					.Append(_dialect.AssignSign)
 					.Append(" ");
@@ -119,9 +134,13 @@ namespace PK.Sql.Generator.Extensions
 				filter.AppendSql(sb, generatorContext);
 			}
 
+			var statement = sb.ToString();
+
+			_logger?.LogDebug("Generated UPDATE statement: {statement}", statement);
+
 			return new UpdateStatement
 				{
-					Statement = sb.ToString(),
+					Statement = statement,
 					ColumnsMap = generatorContext.ColumnsMappings,
 					Params = generatorContext.Params.ToDictionary(
 						p => p.Value,
@@ -144,9 +163,13 @@ namespace PK.Sql.Generator.Extensions
 			sb.Append(" WHERE ");
 			filter.AppendSql(sb, generatorContext);
 
+			var statement = sb.ToString();
+
+			_logger?.LogDebug("Generated DELETE statement: {statement}", statement);
+
 			return new DeleteStatement
 				{
-					Statement = sb.ToString(),
+					Statement = statement,
 					Params = generatorContext.Params.ToDictionary(
 						p => p.Value,
 						p => p.Key
@@ -156,18 +179,19 @@ namespace PK.Sql.Generator.Extensions
 
 		#endregion
 	}
-	
+
 	public class SqlGenerator<T> : SqlGenerator where T : ISqlDialect, new()
 	{
-		public SqlGenerator() : this(new T(), new DumbNameConverter())
+		public SqlGenerator() : this(new T(), new DumbNameConverter(), null)
 		{
 		}
 
-		public SqlGenerator(INameConverter nameConverter) : this(new T(), nameConverter)
+		public SqlGenerator(INameConverter nameConverter, ILoggerFactory loggerFactory = null) : this(new T(), nameConverter, loggerFactory)
 		{
 		}
 
-		public SqlGenerator(T dialect, INameConverter nameConverter) : base(dialect, nameConverter)
+		public SqlGenerator(T dialect, INameConverter nameConverter, ILoggerFactory loggerFactory = null)
+			: base(dialect, nameConverter, loggerFactory)
 		{
 		}
 

@@ -1,5 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using PK.Sql.Generator.Extensions.Extensions.Assigment;
+using PK.Sql.Generator.Extensions.Extensions.Filters;
 using PK.Sql.Generator.Extensions.Interfaces;
+using PK.Sql.Generator.Extensions.Models;
 
 namespace PK.Sql.Generator.Extensions.Dialects
 {
@@ -129,6 +136,130 @@ namespace PK.Sql.Generator.Extensions.Dialects
 
 		/// <inheritdoc />
 		public virtual string AssignSign => "=";
+
+		public virtual InsertStatement Insert(string schema, string table, IDictionary<string, string> parameterNames)
+		{
+			var parameters = parameterNames.ToList();
+
+			var stringBuilder = new StringBuilder("INSERT INTO ")
+				.Append(GetEscapedTableName(table, schema))
+				.Append(" (")
+				.Append(
+					string.Join(
+						", ",
+						parameters.Select(p => GetEscapedParameterName(p.Key))
+						)
+					)
+				.Append(") VALUES(")
+				.Append(
+					string.Join(
+						", ",
+						parameters.Select(p => GetParameterReference(p.Value))
+						)
+					)
+				.Append(')');
+
+			return new InsertStatement { Statement = stringBuilder.ToString() };
+		}
+
+		/// <inheritdoc />
+		public WhereStatement Where<TParam>(Expression<Func<TParam, bool>> filterExpression, FilterParseHelpers filterParseHelpers)
+		{
+			var generatorContext = new GeneratorContext();
+
+			var sb = new StringBuilder();
+
+			var filter = filterParseHelpers.ParseFilter(filterExpression.Body);
+			filter.AppendSql(sb, generatorContext);
+
+			return new WhereStatement
+				{
+					Statement = sb.ToString(),
+					// reverse dictionary
+					Params = generatorContext.Params.ToDictionary(
+						p => p.Value,
+						p => p.Key
+						)
+				};
+		}
+
+		public virtual UpdateStatement Update<TParam>(
+			string schema,
+			string table,
+			Expression<Func<TParam>> updateAction,
+			Expression<Func<TParam, bool>> filterExpression,
+			FilterParseHelpers filterParseHelpers,
+			AssigmentParseHelpers assigmentParseHelpers
+			)
+		{
+			var generatorContext = new GeneratorContext();
+
+			var tableAlias = filterParseHelpers.GetTableAlias(filterExpression);
+			var updateParams = assigmentParseHelpers.ParseAssigment(updateAction.Body);
+
+			var sb = new StringBuilder("UPDATE ")
+				.Append(GetEscapedTableName(table, schema, tableAlias))
+				.Append(" SET ");
+
+			var first = updateParams.Assigments.First();
+			foreach (var assigment in updateParams.Assigments)
+			{
+				if (assigment != first)
+				{
+					sb.Append(", ");
+				}
+
+				generatorContext.ColumnsMappings[assigment.ColumnName] = assigment.Name;
+
+				sb.Append(GetEscapedParameterName(assigment.ColumnName, tableAlias))
+					.Append(" ")
+					.Append(AssignSign)
+					.Append(" ");
+
+				assigment.AppendSql(sb, generatorContext);
+			}
+
+			if (filterExpression != null)
+			{
+				var filter = filterParseHelpers.ParseFilter(filterExpression.Body);
+				sb.Append(" WHERE ");
+				filter.AppendSql(sb, generatorContext);
+			}
+
+			return new UpdateStatement
+				{
+					Statement = sb.ToString(),
+					ColumnsMap = generatorContext.ColumnsMappings,
+					Params = generatorContext.Params.ToDictionary(
+						p => p.Value,
+						p => p.Key
+						)
+				};
+		}
+
+		/// <inheritdoc />
+		public virtual DeleteStatement Delete<TParam>(string schema, string table, Expression<Func<TParam, bool>> filterExpression, FilterParseHelpers filterParseHelpers)
+		{
+			var generatorContext = new GeneratorContext();
+
+			var tableAlias = filterParseHelpers.GetTableAlias(filterExpression);
+
+			var sb = new StringBuilder("DELETE FROM ")
+				.Append(GetEscapedTableName(table, schema, tableAlias));
+
+			var filter = filterParseHelpers.ParseFilter(filterExpression.Body);
+			sb.Append(" WHERE ");
+			filter.AppendSql(sb, generatorContext);
+
+			return new DeleteStatement
+				{
+					Statement = sb.ToString(),
+					Params = generatorContext.Params.ToDictionary(
+						p => p.Value,
+						p => p.Key
+						)
+				};
+		}
 
 		#endregion
 	}

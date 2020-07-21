@@ -20,7 +20,7 @@ namespace PK.EF.Dapper.Extensions
 			var entityType = context.Model.FindEntityType(typeof(TEntity));
 			if (entityType == null)
 			{
-				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
+				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered in DbContext. Use overload with table name and schema");
 			}
 
 			var parameters = new MappedDynamicParameters();
@@ -71,7 +71,7 @@ namespace PK.EF.Dapper.Extensions
 			var entityType = context.Model.FindEntityType(typeof(TEntity));
 			if (entityType == null)
 			{
-				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
+				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered in DbContext. Use overload with table name and schema");
 			}
 			
 			var parameters = context.GetParameters(entity);
@@ -137,7 +137,7 @@ namespace PK.EF.Dapper.Extensions
 			var entityType = context.Model.FindEntityType(typeof(TEntity));
 			if (entityType == null)
 			{
-				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
+				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered in DbContext. Use overload with table name and schema");
 			}
 
 			return UpdateAsync(
@@ -182,7 +182,7 @@ namespace PK.EF.Dapper.Extensions
 			var entityType = context.Model.FindEntityType(typeof(TEntity));
 			if (entityType == null)
 			{
-				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered if DbContext. Use overload with table name and schema");
+				throw new InvalidOperationException($"Entity of type {typeof(TEntity).FullName} is not registered in DbContext. Use overload with table name and schema");
 			}
 
 			return DeleteAsync(context, entityType.GetSchema(), entityType.GetTableName(), filterExpression);

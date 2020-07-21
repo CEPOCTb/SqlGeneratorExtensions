@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net471;net472;net48;netstandard2.1;netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
-		<Title>Extensions for SQL generation and Dapper integration into Entity Framework</Title> 
-		<Version>0.0.2</Version> 
+		<Title>Extensions for SQL generation and Dapper integration into Entity Framework</Title>
+		<Version>0.0.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

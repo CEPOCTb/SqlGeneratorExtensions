@@ -35,8 +35,16 @@ namespace PK.Sql.Generator.Extensions.Filters
 		{
 			if (IsValue)
 			{
-				var paramName = filterParams.Add(Value);
-				builder.Append(Dialect.GetParameterReference(paramName));
+				var value = Value;
+				if (value is null)
+				{
+					builder.Append("NULL");
+				}
+				else
+				{
+					var paramName = filterParams.Add(Value);
+					builder.Append(Dialect.GetParameterReference(paramName));
+				}
 			}
 			else
 			{

@@ -25,7 +25,7 @@ namespace PK.Sql.Generator.Extensions.Filters
 			[NotNull] BinaryExpression expression,
 			[NotNull] Expression originalExpression,
 			[NotNull] ISqlDialect dialect,
-			[NotNull] FilterParseHelpers parseHelper, 
+			[NotNull] FilterParseHelpers parseHelper,
 			bool skipBrackets) : base(dialect)
 		{
 			_expression = expression ?? throw new ArgumentNullException(nameof(expression));
@@ -81,8 +81,16 @@ namespace PK.Sql.Generator.Extensions.Filters
 			}
 			else if (IsValue)
 			{
-				var paramName = filterParams.Add(Value);
-				builder.Append(Dialect.GetParameterReference(paramName));
+				var value = Value;
+				if (value is null)
+				{
+					builder.Append("NULL");
+				}
+				else
+				{
+					var paramName = filterParams.Add(value);
+					builder.Append(Dialect.GetParameterReference(paramName));
+				}
 			}
 			else
 			{

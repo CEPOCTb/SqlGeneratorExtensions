@@ -26,8 +26,16 @@ namespace PK.Sql.Generator.Extensions.Assigment
 
 		public override void AppendSql([NotNull] StringBuilder builder, [NotNull] GeneratorContext filterParams)
 		{
-			var paramName = filterParams.Add(Value);
-			builder.Append(Dialect.GetParameterReference(paramName));
+			var value = Value;
+			if (value != null)
+			{
+				var paramName = filterParams.Add(value);
+				builder.Append(Dialect.GetParameterReference(paramName));
+			}
+			else
+			{
+				builder.Append("NULL");
+			}
 		}
 	}
 }
