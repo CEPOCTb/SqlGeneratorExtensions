@@ -5,7 +5,7 @@
 		<Version Condition="'$(Configuration)' == 'Debug'">$(Version)-alpha-$(BuildNumber)</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
-        <IncludeSource>true</IncludeSource>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageOutputPath>$(SolutionDir)\BuildPackages\</PackageOutputPath>
     </PropertyGroup>
 </Project>
